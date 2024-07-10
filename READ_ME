@@ -1,0 +1,12 @@
+//Emilio Pena - ebp0053
+
+Use the following command to compile:
+
+$ g++ -std=c++0x avl.cpp
+$ g++ -std=c++0x avlCheckTwo.cpp - checks if binary tree is avl tree
+
+Use the following command to test:
+
+./a.out "FILE_NAME".txt
+
+avlCheckTwo returns the height of the binary tree showing that it is or is not an avlTree

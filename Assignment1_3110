@@ -1,0 +1,199 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Student structure with additional information
+struct Student {
+    string name;
+    string dob;
+    int studentId;
+};
+
+// Node structure to represent each element in the linked list
+struct Node {
+    Student data;
+    Node* next;
+
+    Node(const Student& student) : data(student), next(nullptr) {}
+};
+
+// LinkedList class with necessary functions (insertion, display, reverse, findMiddle, remove, search)
+class StudentList {
+private:
+    Node* head;
+
+public:
+    StudentList() : head(nullptr) {}
+
+    // Function to insert a new student record at the end of the linked list
+    void insert(const Student& student) {
+        Node* newNode = new Node(student);
+
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    // Function to display the list of students
+    void display() {
+        Node* temp = head;
+        while (temp) {
+            cout << "Name: " << temp->data.name << ", ";
+            cout << "DOB: " << temp->data.dob << ", ";
+            cout << "Student ID: " << temp->data.studentId << endl;
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    // Function to reverse the linked list
+    void reverse() {
+        Node* prev = nullptr;
+        Node* current = head;
+        Node* next = nullptr;
+
+        while (current != nullptr) {
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+        }
+
+        head = prev;
+    }
+
+    // Function to find the middle element of the linked list
+    Node* findMiddle() {
+        if (head == nullptr) {
+            return nullptr;
+        }
+
+        Node* slow = head;
+        Node* fast = head;
+
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        return slow;
+    }
+
+    // Function to remove a student record based on the student ID
+    bool remove(int studentId) {
+        Node* temp = head;
+        Node* prev = nullptr;
+
+        while (temp && temp->data.studentId != studentId) {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        if (temp == nullptr) {
+            return false; // Student ID not found
+        }
+
+        if (prev == nullptr) {
+            head = temp->next;
+        } else {
+            prev->next = temp->next;
+        }
+
+        delete temp;
+        return true; // Student record successfully removed
+    }
+
+
+    // Destructor to free memory when the linked list object is destroyed
+    ~StudentList() {
+        Node* temp = head;
+        while (temp) {
+            Node* toDelete = temp;
+            temp = temp->next;
+            delete toDelete;
+        }
+    }
+};
+
+int main() {
+    StudentList studentList;
+
+    char choice;
+    do {
+        cout << "1. Insert a student record\n";
+        cout << "2. Display the list of students\n";
+        cout << "3. Reverse the list\n";
+        cout << "4. Find the middle element\n";
+        cout << "5. Remove a student record\n";
+        cout << "0. Quit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) 
+        {
+            case '0':
+            {
+                break;
+            }
+            case '1':
+                {
+                    Student newStudent;
+                    cout << "Enter student name: ";
+                    cin >> newStudent.name;
+                    cout << "Enter student date of birth (YYYY-MM-DD): ";
+                    cin >> newStudent.dob;
+                    cout << "Enter student ID: ";
+                    cin >> newStudent.studentId;
+
+                    studentList.insert(newStudent);
+                    break;
+                }
+            case '2':
+                cout << "List of students:\n";
+                studentList.display();
+                break;
+            case '3':
+                studentList.reverse();
+                cout << "List reversed.\n";
+                break;
+            case '4':
+                {
+                    Node* middle = studentList.findMiddle();
+                    if (middle != nullptr) {
+                        cout << "Middle element: ";
+                        cout << "Name: " << middle->data.name << ", ";
+                        cout << "DOB: " << middle->data.dob << ", ";
+                        cout << "Student ID: " << middle->data.studentId << endl;
+                    } else {
+                        cout << "List is empty or has even number of elements.\n";
+                    }
+                    break;
+                }
+            case '5':
+                {
+                    int studentIdToRemove;
+                    cout << "Enter student ID to remove: ";
+                    cin >> studentIdToRemove;
+
+                    if (studentList.remove(studentIdToRemove)) {
+                        cout << "Student record removed.\n";
+                    } else {
+                        cout << "Student record not found.\n";
+                    }
+                    break;
+                }
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+
+    } while (choice != '0');
+
+    return 0;
+}
